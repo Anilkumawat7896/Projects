@@ -39,9 +39,9 @@ const SingUpForm = () => {
   }
   return (
     <Form {...form}>
-      <div className="sm:w-420 flex-center flex-col">
+      <div className="sm:w-420 flex-center flex-col h-auto mt-80">
         <img src="/assets/images/logo.svg" alt="Logo" />
-        <h2 className="h3-bold md:h2-bold p-5 sm:p-12">Create a new account</h2>
+        <h2 className="h3-bold md:h2-bold p-1 sm:p-3">Create a new account</h2>
         <p className="text-light-3 small-medium md:base-regular mt-2">
           To use snpagram please enter your details
         </p>
