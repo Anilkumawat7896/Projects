@@ -12,7 +12,7 @@ function App() {
         {/* public routes  */}
         <Route element={<AuthLayout />}>
           <Route path="/sing-in" element={<SingInForm />} />
-          <Route path="/sing-in" element={<SingUpForm />} />
+          <Route path="/sing-up" element={<SingUpForm />} />
         </Route>
         {/* Private routes  */}
         <Route element={<RootLayout />}>
