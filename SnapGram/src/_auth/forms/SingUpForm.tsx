@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import { SingUpFormSchemaValidation } from "../../lib/validations/index";
 import Loader from "../../components/shared/Loader";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+
 import {
   Form,
   FormControl,
@@ -16,8 +17,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { createUserAccount } from "@/lib/appwrite/apis";
+import { Link } from "react-router-dom";
 
 const SingUpForm = () => {
+  const { toast } = useToast();
   const isLoading = false;
   // 1. Define your form.
   const form = useForm<z.infer<typeof SingUpFormSchemaValidation>>({
@@ -26,19 +29,23 @@ const SingUpForm = () => {
       fullName: "",
       email: "",
       username: "",
-      phoneNumber: "",
       password: "",
-      cpassword: "",
     },
   });
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SingUpFormSchemaValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     const newUser = await createUserAccount(values);
-    console.log(newUser);
+    if (!newUser) {
+      return toast({
+        title: "Sing up failed , please try again",
+      });
+    }
+
+    // after a successful registration a session must be created which will automatically log in user
+    // const session = await singInAccount()
   }
+
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col mt-40">
@@ -94,19 +101,7 @@ const SingUpForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone number</FormLabel>
-                <FormControl>
-                  <Input className="shad-input" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <FormField
             control={form.control}
             name="password"
@@ -120,19 +115,7 @@ const SingUpForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="cpassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm password</FormLabel>
-                <FormControl>
-                  <Input className="shad-input" type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <Button type="submit" className="w-full shad-button_primary">
             {isLoading ? (
               <div className="flext-center gap-2">
