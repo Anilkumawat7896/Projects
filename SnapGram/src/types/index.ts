@@ -45,6 +45,22 @@ export type INewUser = {
   email: string;
   username: string;
   password: string;
+};
 
+export type IContextType = {
+  user: IUser;
+  isLoading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<IUser>>; // this will change a state variable that's why it have this type
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>; // this will change a state variable that's why it have this type
+  checkAuthUser: () => Promise<boolean>;
+};
 
+export const INITIAL_USER = {
+  id: "",
+  name: "",
+  username: "",
+  email: "",
+  imageUrl: "",
+  bio: "",
 };
