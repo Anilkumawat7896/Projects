@@ -16,12 +16,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createUserAccount } from "@/lib/appwrite/apis";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  useCreateUserAccountMutation,
+  useSingInAccountMutation,
+} from "@/lib/react-query/queriesAndMutation";
+import { useUserContext } from "@/context/AuthContext";
 
 const SingUpForm = () => {
   const { toast } = useToast();
-  const isLoading = false;
+  const navigate = useNavigate();
+  const { checkAuthUser } = useUserContext();
+
+  const { mutateAsync: createUserAccount, isPending: isCreatingUser } =
+    useCreateUserAccountMutation();
+
+  const { mutateAsync: singInAccount } =
+    useSingInAccountMutation();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof SingUpFormSchemaValidation>>({
     resolver: zodResolver(SingUpFormSchemaValidation),
@@ -41,9 +53,23 @@ const SingUpForm = () => {
         title: "Sing up failed , please try again",
       });
     }
+    const session = await singInAccount({
+      email: values.email,
+      password: values.password,
+    });
 
-    // after a successful registration a session must be created which will automatically log in user
-    // const session = await singInAccount()
+    if (!session) {
+      return toast({ title: "Sing in failed please try again!" });
+    }
+
+    const isLoggedIn = await checkAuthUser();
+
+    if (isLoggedIn) {
+      form.reset();
+      navigate("/");
+    } else {
+      return toast({ title: "Sing up failed.Please try again" });
+    }
   }
 
   return (
@@ -117,7 +143,7 @@ const SingUpForm = () => {
           />
 
           <Button type="submit" className="w-full shad-button_primary">
-            {isLoading ? (
+            {isCreatingUser ? (
               <div className="flext-center gap-2">
                 <Loader />
               </div>
