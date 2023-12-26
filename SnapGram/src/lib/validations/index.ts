@@ -16,7 +16,6 @@ export const SingUpFormSchemaValidation = z.object({
 });
 export const SingInFormSchemaValidation = z.object({
   email: z.string().email({ message: "Enter a Valid Email" }),
-
   password: z
     .string()
     .regex(
@@ -26,4 +25,11 @@ export const SingInFormSchemaValidation = z.object({
           "Password must be at least 8 characters long and include a numeric value, uppercase, lowercase, and special character.",
       }
     ),
+});
+
+export const postValidations = z.object({
+  caption: z.string().min(5).max(2200),
+  file: z.custom<File[]>(),
+  location: z.string().min(2).max(100),
+  tags: z.string(),
 });

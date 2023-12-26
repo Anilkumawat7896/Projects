@@ -1,5 +1,4 @@
 import { getCurrentUser } from "@/lib/appwrite/apis";
-
 import { IContextType, INITIAL_USER, IUser } from "@/types";
 import { useContext, createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
